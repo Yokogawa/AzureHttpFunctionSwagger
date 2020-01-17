@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Yokogawa.IIoT.AzureHttpFunctionSwagger.Tests</name>
+    </assembly>
+    <members>
+        <member name="T:Yokogawa.IIoT.AzureHttpFunctionSwagger.Tests.TestHttpFunction.FakeFunctionOneInputDto">
+            <summary>
+            This dto describes the input
+            </summary>
+        </member>
+        <member name="P:Yokogawa.IIoT.AzureHttpFunctionSwagger.Tests.TestHttpFunction.FakeFunctionOneInputDto.StringProperty">
+            <summary>
+            This property is a string
+            </summary>
+        </member>
+        <member name="P:Yokogawa.IIoT.AzureHttpFunctionSwagger.Tests.TestHttpFunction.FakeFunctionOneInputDto.IntProperty">
+            <summary>
+            This property is an integer
+            </summary>
+        </member>
+        <member name="T:Yokogawa.IIoT.AzureHttpFunctionSwagger.Tests.TestHttpFunction.FakeFunctionOneCreatedResponse">
+            <summary>
+            This response is returned from a post request
+            </summary>
+        </member>
+        <member name="P:Yokogawa.IIoT.AzureHttpFunctionSwagger.Tests.TestHttpFunction.FakeFunctionOneCreatedResponse.ResponseMessage">
+            <summary>
+            This is a response message parameter
+            </summary>
+        </member>
+    </members>
+</doc>
