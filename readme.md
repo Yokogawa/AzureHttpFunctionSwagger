@@ -29,8 +29,11 @@ example csproj:
 ## Function Startup
 example startup.cs
 ```csharp
+using System;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+using Microsoft.Azure.WebJobs.Host.Bindings;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Yokogawa.IIoT.AzureHttpFunctionSwagger.Configuration;
 using Microsoft.OpenApi.Models;
 
@@ -45,15 +48,24 @@ namespace MyApi
 
         public override void Configure(IFunctionsHostBuilder builder)
         {
-            builder.Services.AddFunctionSwagger(new OpenApiInfo
+            var services = builder?.Services ?? throw new ApplicationException("Something has gone wrong. Services is not available.");
+
+            var executionContextOptions = services
+                ?.BuildServiceProvider()
+                ?.GetService<IOptions<ExecutionContextOptions>>()
+                ?.Value;
+
+            var appDirectory = executionContextOptions?.AppDirectory ??
+                               Environment.CurrentDirectory;
+
+            services.AddFunctionSwagger(new OpenApiInfo
             {
                 Description = "My Api Description",
                 Title = "My API Title",
                 Version = "1"
-            }, $"{container.AppDirectory}\\MyApi.xml"); // optional: xml documentation file. Specifying this file will include the xml comments on types from the assembly in the swagger document.
+            }, $"{appDirectory}\\MyApi.xml"); // optional: xml documentation file. Specifying this file will include the xml comments on types from the assembly in the swagger document.
 
-            container
-                .Services
+            services
                 .AddMvcCore()
                 .AddJsonFormatters()
                 .AddApiExplorer();
