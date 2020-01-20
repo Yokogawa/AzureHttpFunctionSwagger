@@ -26,7 +26,7 @@ jobs:
       uses: rohith/publish-nuget@v1.2.0
       with:
         # Project (csproj) directory path relative from the root of repository
-        project_dir: .
+        project_dir: ./AzureHttpFunctionSwagger/
         # Format of the tag to be created, `*` is placeholder for actual version
         tag_format: v*
         # API key for the NuGet feed
