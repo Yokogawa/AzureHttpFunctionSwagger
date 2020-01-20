@@ -1,0 +1,27 @@
+name: Release Package
+
+on:
+  release:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+      
+    - name: Setup .NET Core 3
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.100
+    - name: Setup .NET Core 2.2
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 2.2.402
+    - name: Build with dotnet
+      run: dotnet build --configuration Release
+    - name: Run Tests
+      run: dotnet test
+    - name: Publish NuGet
+      run: dotnet nuget push ./AzureHttpFunctionSwagger/bin/Release/*.nupkg -s https://api.nuget.org/v3/index.json -k ${{ secrets.azurehttpfunctionswaggerApiKey }}
