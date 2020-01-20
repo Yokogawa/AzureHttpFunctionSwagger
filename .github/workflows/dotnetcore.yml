@@ -22,3 +22,12 @@ jobs:
       run: dotnet build --configuration Release
     - name: Run Tests
       run: dotnet test
+    - name: Publish NuGet
+      uses: rohith/publish-nuget@v1.2.0
+      with:
+        # Project (csproj) directory path relative from the root of repository
+        project_dir: .
+        # Format of the tag to be created, `*` is placeholder for actual version
+        tag_format: v*
+        # API key for the NuGet feed
+        nuget_key: ${{ secrets.azurehttpfunctionswaggerApiKey }}
