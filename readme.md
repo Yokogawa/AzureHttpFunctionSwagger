@@ -74,11 +74,11 @@ namespace MyApi
 }
 ```
 
-## How To Use
+# How To Use
 
 This package relies on primarily Function Attributes to describe API actions.
 
-### Swagger Operation
+**Swagger Operation**
 
 ```csharp
 [SwaggerOperation(
@@ -88,25 +88,25 @@ This package relies on primarily Function Attributes to describe API actions.
             Summary = "A short summary")]
 ```
 
-### Body
+**Body**
 
 ```csharp
 [Body(typeof(InputDto), Required = false)]
 ```
 
-### Swagger Request
+**Swagger Request**
 
 ```csharp
 [SwaggerRequest(In = RequestSource.Header, Type = typeof(string), Name = "parameterName")]
 ```
 
-## Swagger Response
+**Swagger Response**
 
 ```csharp
 [SwaggerResponse((int)HttpStatusCode.Created, "application/json", typeof(ResponseDto))]
 ```
 
-## Custom Attributes
+# Custom Attributes
 
 You can create your own attributes to describe the swagger operations.
 
@@ -115,6 +115,7 @@ You can create your own attributes to describe the swagger operations.
 Implementing this interface with a custom attribute and registering the type in the dependency injection container will allow you customize the creation of parameter descriptions in the swagger document.
 
 [SwaggerRequestAttribute mapping](https://github.com/Yokogawa/AzureHttpFunctionSwagger/blob/master/AzureHttpFunctionSwagger/Pipeline/SwaggerRequestParameterMapper.cs)
+
 [Register in the DI container](https://github.com/Yokogawa/AzureHttpFunctionSwagger/blob/master/AzureHttpFunctionSwagger/Configuration/ServiceCollectionExtensions.cs#L95)
 
 **IMapApiResponses**
