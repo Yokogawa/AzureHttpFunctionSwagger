@@ -1,6 +1,8 @@
-name: .NET Core
+name: Pull Request
 
-on: [push]
+on:
+  pull_request:
+    branches: master
 
 jobs:
   build:
@@ -18,9 +20,5 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 2.2.402
-    - name: Build with dotnet
-      run: dotnet build --configuration Release
     - name: Run Tests
       run: dotnet test
-    - name: Publish NuGet
-      run: dotnet nuget push ./AzureHttpFunctionSwagger/bin/Release/*.nupkg -s https://api.nuget.org/v3/index.json -k ${{ secrets.azurehttpfunctionswaggerApiKey }}
