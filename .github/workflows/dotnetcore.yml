@@ -23,4 +23,4 @@ jobs:
     - name: Run Tests
       run: dotnet test
     - name: Publish NuGet
-      run: dotnet nuget push ./AzureHttpFunctionSwagger/bin/release/*.nupkg -s https://api.nuget.org/v3/index.json -k ${{ secrets.azurehttpfunctionswaggerApiKey }}
+      run: dotnet nuget push ./AzureHttpFunctionSwagger/bin/Release/*.nupkg -s https://api.nuget.org/v3/index.json -k ${{ secrets.azurehttpfunctionswaggerApiKey }}
