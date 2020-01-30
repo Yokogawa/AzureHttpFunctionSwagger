@@ -8,9 +8,6 @@
     <AssemblyName>Yokogawa.IIoT.AzureHttpFunctionSwagger.Tests</AssemblyName>
 
     <RootNamespace>Yokogawa.IIoT.AzureHttpFunctionSwagger.Tests</RootNamespace>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>$(MSBuildProjectDirectory)\$(MSBuildProjectName).xml</DocumentationFile>
   </PropertyGroup>
 
