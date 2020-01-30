@@ -21,6 +21,6 @@ jobs:
       with:
         dotnet-version: 2.2.402
     - name: Build
-        run: dotnet build --configuration Release
+      run: dotnet build --configuration Release
     - name: Run Tests
       run: dotnet test --no-build --configuration Release
