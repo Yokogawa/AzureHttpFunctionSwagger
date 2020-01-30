@@ -21,4 +21,4 @@ jobs:
       with:
         dotnet-version: 2.2.402
     - name: Run Tests
-      run: dotnet test -f netcoreapp2.2
+      run: dotnet test --no-build --configuration Release
