@@ -23,7 +23,6 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 2.2.402
-    - name: Run Tests
-      run: dotnet test --no-build --configuration Release
+  
     - name: Publish NuGet
       run: dotnet nuget push ./AzureHttpFunctionSwagger/bin/Release/*.nupkg -s https://api.nuget.org/v3/index.json -k ${{ secrets.azurehttpfunctionswaggerApiKey }}
