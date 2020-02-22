@@ -8,7 +8,10 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
+using Microsoft.OpenApi.Writers;
 
 namespace Yokogawa.IIoT.AzureHttpFunctionSwagger.Functions
 {
@@ -40,17 +43,17 @@ namespace Yokogawa.IIoT.AzureHttpFunctionSwagger.Functions
             try
             {
                 var document = _swaggerProvider.GetSwagger(_info.Version);
-                using (var outputString = new StringWriter())
+                using (var stringWriter = new StringWriter(CultureInfo.InvariantCulture))
                 {
-                    var serializer = SwaggerSerializerFactory.Create(Options.Create(new MvcJsonOptions()));
-                    serializer.Serialize(outputString, document);
-                    return new OkObjectResult(outputString.ToString());
+                    var jsonWriter = new OpenApiJsonWriter(stringWriter);
+                    document.SerializeAsV3(jsonWriter);
+                    return new OkObjectResult(stringWriter.ToString());
                 }
             }
             catch (Exception ex)
             {
 #if DEBUG
-                return new ObjectResult(ex)
+                return new ObjectResult(ex.Demystify())
                 {
                     StatusCode = 500
                 };

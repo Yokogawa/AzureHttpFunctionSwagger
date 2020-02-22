@@ -4,6 +4,11 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.Options;
+using Microsoft.Net.Http.Headers;
 using Yokogawa.IIoT.AzureHttpFunctionSwagger.Pipeline;
 
 namespace Yokogawa.IIoT.AzureHttpFunctionSwagger
@@ -16,6 +21,8 @@ namespace Yokogawa.IIoT.AzureHttpFunctionSwagger
         private readonly IEnumerable<IMapApiParameterDescriptions> _parameterMappings;
         private readonly IParameterDescriptionFactory _parameterDescriptionFactory;
         private readonly ILogger<FunctionApiDescriptionGroupCollectionProvider> _logger;
+        private readonly IOptions<MvcOptions> _mvcOptions;
+        private MediaTypeCollection _contentTypes;
 
         public FunctionApiDescriptionGroupCollectionProvider(
             IFunctionHttpMethodProvider functionDataProvider,
@@ -23,7 +30,11 @@ namespace Yokogawa.IIoT.AzureHttpFunctionSwagger
             IEnumerable<IMapApiResponses> responseMappings,
             IEnumerable<IMapApiParameterDescriptions> parameterMappings,
             IParameterDescriptionFactory parameterDescriptionFactory,
-            ILogger<FunctionApiDescriptionGroupCollectionProvider> logger)
+            ILogger<FunctionApiDescriptionGroupCollectionProvider> logger,
+            IApiRequestFormatMetadataProvider formatMetadataProvider,
+            IOptions<MvcOptions> mvcOptions,
+            IEnumerable<IApiDescriptionProvider> apiDescriptionProviders,
+            IActionDescriptorCollectionProvider actionDescriptorCollectionProvider)
         {
             _functionDataProvider = functionDataProvider;
             _tokenParser = tokenParser;
@@ -31,6 +42,9 @@ namespace Yokogawa.IIoT.AzureHttpFunctionSwagger
             _parameterMappings = parameterMappings;
             _parameterDescriptionFactory = parameterDescriptionFactory;
             _logger = logger;
+            _mvcOptions = mvcOptions;
+            _contentTypes = new MediaTypeCollection();
+            _contentTypes.Add(MediaTypeHeaderValue.Parse("application/json"));
         }
 
         public ApiDescriptionGroupCollection Generate()
@@ -42,6 +56,13 @@ namespace Yokogawa.IIoT.AzureHttpFunctionSwagger
                 var routeParameters = _tokenParser.Parse(route);
                 var apiParameterDescriptions = new List<ApiParameterDescription>();
                 var apiResponseTypes = new List<ApiResponseType>();
+
+                // map body if available
+                var bodyAttributes = method
+                    .MethodInfo
+                    .GetCustomAttributes(typeof(SwaggerRequestAttribute), false)
+                    .Where(x => (x as SwaggerRequestAttribute)?.In == RequestSource.Body)
+                    .Select(x => x as SwaggerRequestAttribute);
 
                 foreach (var parameterMapping in _parameterMappings)
                 {
@@ -84,13 +105,24 @@ namespace Yokogawa.IIoT.AzureHttpFunctionSwagger
                 }
                 foreach (var httpVerb in method.TriggerAttribute.Methods)
                 {
-                    descriptions.Add(new FunctionApiDescription(
+                    var description = new FunctionApiDescription(
                         methodInfo: method.MethodInfo,
                         name: method.Name,
                         parameters: apiParameterDescriptions,
                         verb: httpVerb,
                         route: route,
-                        responseTypes: apiResponseTypes));
+                        responseTypes: apiResponseTypes);
+
+                    foreach (var bodyAttribute in bodyAttributes)
+                    {
+                        var requestFormats = GetSupportedFormats(bodyAttribute.Type);
+                        foreach (var format in requestFormats)
+                        {
+                            description.SupportedRequestFormats.Add(format);
+                        }
+                    }
+
+                    descriptions.Add(description);
                 }
             }
             var groups = new ApiDescriptionGroup("default", descriptions);
@@ -98,5 +130,34 @@ namespace Yokogawa.IIoT.AzureHttpFunctionSwagger
         }
 
         public ApiDescriptionGroupCollection ApiDescriptionGroups => Generate();
+
+        private IReadOnlyList<ApiRequestFormat> GetSupportedFormats(Type type)
+        {
+            var results = new List<ApiRequestFormat>();
+            foreach (var contentType in _contentTypes)
+            {
+                foreach (var formatter in _mvcOptions?.Value.InputFormatters)
+                {
+                    if (formatter is IApiRequestFormatMetadataProvider requestFormatMetadataProvider)
+                    {
+                        var supportedTypes = requestFormatMetadataProvider.GetSupportedContentTypes(contentType, type);
+
+                        if (supportedTypes != null)
+                        {
+                            foreach (var supportedType in supportedTypes)
+                            {
+                                results.Add(new ApiRequestFormat()
+                                {
+                                    Formatter = formatter,
+                                    MediaType = supportedType,
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
+            return results;
+        }
     }
 }

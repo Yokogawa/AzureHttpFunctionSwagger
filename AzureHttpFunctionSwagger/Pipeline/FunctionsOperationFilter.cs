@@ -1,12 +1,13 @@
-﻿using Swashbuckle.AspNetCore.Annotations;
-using Swashbuckle.AspNetCore.Swagger;
+﻿using System.Linq;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Yokogawa.IIoT.AzureHttpFunctionSwagger.Pipeline
 {
     public class SwaggerOperationFilter : IOperationFilter
     {
-        public void Apply(Operation operation, OperationFilterContext context)
+        public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
             if (operation == null || context == null)
                 return;
@@ -26,7 +27,10 @@ namespace Yokogawa.IIoT.AzureHttpFunctionSwagger.Pipeline
                 operation.Summary = descriptionAttribute.Summary;
 
             if (descriptionAttribute.Tags != null && descriptionAttribute.Tags.Length > 0)
-                operation.Tags = descriptionAttribute.Tags;
+                operation.Tags = descriptionAttribute.Tags.Select(x => new OpenApiTag
+                {
+                    Name = x
+                }).ToList();
         }
     }
 }

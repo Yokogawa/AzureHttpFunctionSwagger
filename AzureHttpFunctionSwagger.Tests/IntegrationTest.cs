@@ -22,6 +22,6 @@ namespace Yokogawa.IIoT.AzureHttpFunctionSwagger.Tests
         protected JobHost _jobHost => _host.Services.GetService<IJobHost>() as JobHost;
         protected ISwaggerProvider _swaggerProvider => _host.Services.GetService<ISwaggerProvider>();
         protected OpenApiInfo _openApiInfo => _host.Services.GetService<OpenApiInfo>();
-        protected SwaggerDocument _document => _swaggerProvider.GetSwagger(_openApiInfo.Version);
+        protected OpenApiDocument _document => _swaggerProvider.GetSwagger(_openApiInfo.Version);
     }
 }
