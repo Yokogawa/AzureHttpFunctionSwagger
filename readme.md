@@ -4,7 +4,7 @@
 
 # Purpose
 
-This package provides the Swagger UI and JSON endpoints for Azure Function apps with Http triggered functions. 
+This package provides the Swagger UI and JSON endpoints for Azure Function apps with Http triggered functions. The goal was to reuse as many of the Swagger attributes as possible to allow an easier transition from traditional API projects to Azure Function HTTP APIs. There was also a secondary goal to provide a pipeline for flexibility, in the event that there was a need to support custom attribute implementations. Those implementations can be provided by the developers consuming this package.
 
 # Configuration
 
@@ -99,6 +99,11 @@ This package relies on primarily Function Attributes to describe API actions.
 
 ```csharp
 [SwaggerResponse((int)HttpStatusCode.Created, "application/json", typeof(ResponseDto))]
+```
+
+**Ignore Endpoint**
+```csharp
+[ApiExplorerSettings(IgnoreApi = true)] 
 ```
 
 # Custom Attributes
