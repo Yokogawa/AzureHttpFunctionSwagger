@@ -64,11 +64,6 @@ namespace MyApi
                 Title = "My API Title",
                 Version = "1"
             }, $"{appDirectory}\\MyApi.xml"); // optional: xml documentation file. Specifying this file will include the xml comments on types from the assembly in the swagger document.
-
-            services
-                .AddMvcCore()
-                .AddJsonFormatters()
-                .AddApiExplorer();
         }
     }
 }
