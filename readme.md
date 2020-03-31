@@ -11,14 +11,14 @@ This package provides the Swagger UI and JSON endpoints for Azure Function apps 
 
 ## Swagger Http Functions
 
-This repository contains two http triggered functions that provide the resources for Swagger. You can either copy those functions into your endpoint, use them as a starting point, or enable `FunctionsInDependencies` in the build package `Microsoft.NET.Sdk.Functions` >= v1.0.31
+This repository contains two http triggered functions that provide the resources for Swagger. You can either copy those functions into your endpoint, use them as a starting point, or enable `FunctionsInDependencies` in the build package `Microsoft.NET.Sdk.Functions` >= v3.0.5
 
 example csproj:
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-    <AzureFunctionsVersion>v2</AzureFunctionsVersion>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AzureFunctionsVersion>v3</AzureFunctionsVersion>
     <FunctionsInDependencies>true</FunctionsInDependencies>
   </PropertyGroup>
 </Project>
