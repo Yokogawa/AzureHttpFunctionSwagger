@@ -106,6 +106,16 @@ This package relies on primarily Function Attributes to describe API actions.
 [ApiExplorerSettings(IgnoreApi = true)] 
 ```
 
+# Newtonsoft Json Integration
+
+To integrate with the Newtonsoft library and take advantage of property attributes like `JsonProperty`
+
+Install the package `Swashbuckle.AspNetCore.Newtonsoft` from nuget
+
+Then add the following line in your startup after `AddFunctionSwagger`
+
+`services.AddSwaggerGenNewtonsoftSupport();`
+
 # Custom Attributes
 
 You can create your own attributes to describe the swagger operations.
